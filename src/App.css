@@ -1,0 +1,211 @@
+:root {
+  --light: #f0d9b5;
+  --dark: #b58863;
+  --select: #f6f669;
+  --last: rgba(255, 235, 59, 0.45);
+  --check: #ff5252;
+  --accent: #2a9d8f;
+  --panel: #ffffff;
+  --text: #2b2d42;
+  --muted: #6c6f85;
+  --danger: #e63946;
+}
+
+.chess-app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.chess-app h1 { text-align: center; }
+
+.layout {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* Board */
+.board-area { width: min(92vw, 560px); }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  border: 4px solid #5a3e2b;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.square {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.square.light { background: var(--light); }
+.square.dark { background: var(--dark); }
+.square.last { background-image: linear-gradient(var(--last), var(--last)); }
+.square.selected { background: var(--select); }
+.square.in-check {
+  background: radial-gradient(circle, var(--check) 20%, transparent 75%),
+    var(--light);
+}
+
+/* Legal move markers */
+.square.target::after {
+  content: "";
+  position: absolute;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+.square.target.capture::after {
+  width: 86%;
+  height: 86%;
+  background: transparent;
+  border: 5px solid rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+/* Pieces */
+.piece {
+  font-size: clamp(28px, 7.5vw, 54px);
+  line-height: 1;
+  pointer-events: none;
+}
+.piece.w {
+  color: #fff;
+  text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 3px #000;
+}
+.piece.b {
+  color: #111;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.coord {
+  position: absolute;
+  font-size: 0.65rem;
+  font-weight: bold;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.coord.rank { top: 2px; left: 3px; }
+.coord.file { bottom: 1px; right: 3px; }
+
+/* Clocks */
+.clock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+  padding: 8px 14px;
+  background: #e8e8ee;
+  color: var(--muted);
+  border-radius: 6px;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+}
+.clock strong { font-family: "Courier New", monospace; font-size: 1.5rem; }
+.clock.active { background: var(--accent); color: #fff; }
+.clock.active.low { background: var(--danger); }
+
+/* Side panel */
+.side {
+  width: min(92vw, 300px);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.banner {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #e8f4f2;
+  font-weight: bold;
+  text-align: center;
+}
+.banner.check { background: #fff3cd; color: #8a6100; }
+.banner.end { background: #ffe0e3; color: #a3202b; }
+
+.notice {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #ffe0e3;
+  color: #a3202b;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 14px 0;
+}
+.controls label { font-size: 0.85rem; font-weight: 600; }
+.controls select {
+  display: block;
+  margin-top: 4px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.chess-app button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.chess-app button:hover { filter: brightness(0.9); }
+
+/* Move list */
+.side h2 { font-size: 1.1rem; margin-bottom: 8px; }
+.move-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+.move-list table { width: 100%; border-collapse: collapse; }
+.move-list td { padding: 5px 10px; font-family: "Courier New", monospace; }
+.move-list tr:nth-child(even) { background: #f7f7fa; }
+.move-list .num { color: var(--muted); width: 40px; }
+.empty { color: var(--muted); padding: 10px; margin: 0; }
+
+/* Promotion dialog */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+.dialog {
+  background: #fff;
+  color: var(--text);
+  padding: 20px 24px;
+  border-radius: 8px;
+  text-align: center;
+}
+.promo-options { display: flex; gap: 10px; margin-top: 12px; }
+.promo-options button {
+  background: var(--dark);
+  width: 64px;
+  height: 64px;
+  padding: 0;
+}
+.promo-options .piece { font-size: 44px; }
